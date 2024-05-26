@@ -3,9 +3,10 @@ import pymongo
 import streamlit as st
 from streamlit_lottie import st_lottie
 import requests
+import os
 
 # Set up OpenAI API key
-openai.api_key = "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"
+openai.api_key = os.getenv("OPENAI_API_KEY")
 EMBEDDING_MODEL = "text-embedding-3-small"
 
 # Function to establish connection to MongoDB
@@ -106,7 +107,11 @@ lottie_cocktail = load_lottie_url("https://assets4.lottiefiles.com/private_files
 # Streamlit app setup
 st.set_page_config(page_title="Cocktail Recommendation", page_icon="🍸", layout="centered")
 st.title("🍹 Cocktail Recommendation System")
-st_lottie(lottie_cocktail, height=300)
+
+if lottie_cocktail:
+    st_lottie(lottie_cocktail, height=300)
+else:
+    st.write("Welcome to the Cocktail Recommendation System!")
 
 st.write("Welcome to the Cocktail Recommendation System! Ask for cocktail recipes and recommendations based on your preferences.")
 
@@ -122,5 +127,3 @@ if query:
     st.write(response)
 else:
     st.write("Please enter a query to get cocktail recommendations.")
-
-# Additional features can be added here as needed.
