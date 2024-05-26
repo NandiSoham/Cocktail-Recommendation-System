@@ -1,0 +1,7 @@
+datasets
+pandas
+openai
+pymongo
+streamlit
+streamlit_lottie
+numpy

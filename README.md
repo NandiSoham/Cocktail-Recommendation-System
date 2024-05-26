@@ -22,6 +22,7 @@ This project is based on Cocktail Recommendation System, which utilizes the Retr
 ## Dependencies:
 - Hugging Face's Datasets library
 - pandas
+- numpy
 - OpenAI
 - pymongo
 - Google Colab (for development environment)
