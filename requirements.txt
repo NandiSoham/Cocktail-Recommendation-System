@@ -5,3 +5,4 @@ pymongo
 streamlit
 streamlit_lottie
 numpy
+dotenv
