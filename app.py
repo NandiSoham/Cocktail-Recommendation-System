@@ -1,8 +1,15 @@
 import openai
+# from google.colab import userdata
+import os
 import pymongo
 import streamlit as st
+from dotenv import load_dotenv
 
-openai.api_key = "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"
+# Load environment variables from .env file
+load_dotenv()
+
+# Access the API key from the environment variable
+openai.api_key = os.getenv("OPENAI_API_KEY")
 EMBEDDING_MODEL = "text-embedding-3-small"
 
 
