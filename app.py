@@ -1,6 +1,6 @@
 import openai
-# from google.colab import userdata
 import os
+# from google.colab import userdata
 import pymongo
 import streamlit as st
 from dotenv import load_dotenv
@@ -96,35 +96,62 @@ def vector_search(user_query, collection):
     results = collection.aggregate(pipeline)
     return list(results)
 
+
 def handle_user_query(query, collection):
+    get_knowledge = vector_search(query, collection)
 
-  get_knowledge = vector_search(query, collection)
+    search_result = []
+    for result in get_knowledge:
+        search_result.append({
+            'title': result.get('title', 'N/A'),
+            'base': result.get('base', 'N/A'),
+            'ingredients': result.get('ingredients', 'N/A'),
+            'directions': result.get('directions', 'N/A')
+        })
 
-  search_result = ''
-  for result in get_knowledge:
-      search_result += f"Title: {result.get('title', 'N/A')}, Base Drink: {result.get('base', 'N/A')}, \n Ingredients: {result.get('ingredients', 'N/A')}, \n Directions: {result.get('directions', 'N/A')}\n"
+    completion = openai.chat.completions.create(
+        model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a cocktail recommendation system."},
+            {"role": "user", "content": "Answer this user query: " + query + " with the following context: " + str(search_result)}
+        ]
+    )
 
-  completion = openai.chat.completions.create(
-      model="gpt-3.5-turbo",
-      messages=[
-          {"role": "system", "content": "You are a cocktail recommendation system."},
-          {"role": "user", "content": "Answer this user query: " + query + " with the following context: " + search_result}
-      ]
-  )
+    return completion.choices[0].message.content, search_result
 
-  return (completion.choices[0].message.content), search_result
+st.set_page_config(page_title="Cocktail Recommendation", layout="wide")
+st.markdown(
+    """
+    <div style='width: 65%; margin: 0 auto;'>
+        <h1 style='text-align: center; color: #1F618D;border-radius: 40px; background: linear-gradient(-225deg, #69EACB 0%, #EACCF8 48%, #6654F1 100%);'>🍹 Cocktail Recommendation 🍸</h1>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+query = st.text_input("Ask your cocktail query here", placeholder="E.g., Recommend a refreshing summer cocktail")
 
-# 6. Conduct query with retrival of sources
-
-st.set_page_config(page_title="Cocktail Recommendation")
-st.header("Ask For Cocktail Recommendation")
-query = st.text_input("Query")
 if query != "":
-  response, source_information = handle_user_query(query, collection)
-  print(source_information)
-  print(response)
-  st.write(f"Response: {response}\n\n")
+    response, search_results = handle_user_query(query, collection)
+    # st.markdown(f"<p style='font-size: 18px; font-weight: bold; color: #333333;'>Response:</p> <p style='font-size: 16px; color: #666666;'>{response}</p>", unsafe_allow_html=True)
+
+    # Display search results as cards
+    cols = st.columns(3)  # Change the number based on your preference
+    for i, result in enumerate(search_results):
+        with cols[i % 3]:
+            with st.container():
+                st.markdown(f"""
+                <div style="border: 3px solid #CCCCCC; border-radius: 5px; padding: 20px; background-color: #17202A;">
+                    <h3 style="color: #EC7063; text-align: center;">{result['title']}</h3>
+                    <p style="font-weight: bold; color: #A3E4D7;">Base Drink: <span style="color: #FBFCFC;">{result['base']}</span></p>
+                    <p style="font-weight: bold; color: #A3E4D7;">Ingredients:</p>
+                    <ul style="list-style-type: square; padding-left: 20px; color: #FBFCFC;">
+                        {''.join(['<li>' + item + '</li>' for item in result['ingredients']])}
+                    </ul>
+                    <p style="font-weight: bold; color: #A3E4D7;">Directions:</p>
+                    <p style="color: #FBFCFC;">{result['directions']}</p>
+                </div>
+                """, unsafe_allow_html=True)
 
 
-
-
+                # Add some spacing between cards
+                st.markdown("<br>", unsafe_allow_html=True)

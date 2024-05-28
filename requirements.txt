@@ -3,6 +3,5 @@ pandas
 openai
 pymongo
 streamlit
-streamlit_lottie
 numpy
-dotenv
+python-dotenv
