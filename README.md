@@ -1,11 +1,13 @@
 
-# Cocktail-Recommendation-System
-
-
+# Cocktail Recommendation System
 
 
 ## 🌟 Project Overview:
 This project is based on Cocktail Recommendation System, which utilizes the Retrieval-Augmented Generation (RAG) approach to provide users with personalized cocktail recommendations based on their queries. Leveraging state-of-the-art machine learning and natural language processing techniques, the system delivers accurate and relevant recommendations. The system employs MongoDB for data storage and retrieval, Hugging Face's Datasets library for dataset management, OpenAI for text embeddings and chat completion, and Google Colab as the development environment.
+## Live Link
+You can access the live web application [here](https://cocktail.streamlit.app/).
+
+![cocktail](https://github.com/NandiSoham/Cocktail-Recommendation-System/assets/56528719/e1f906ae-5b56-4c81-abc4-3d119591cef5)
 
 
 ## ⚙️ Steps
@@ -25,4 +27,6 @@ This project is based on Cocktail Recommendation System, which utilizes the Retr
 - numpy
 - OpenAI
 - pymongo
-- Google Colab (for development environment)
+- Google Colab (for development environment) [optional]
+- streamlit
+- python-dotenv
